@@ -79,19 +79,19 @@ def parse_args():
     parser.add_argument(
         "--height",
         type=int,
-        default=640,
+        default=1440,
         help="Input image height.",
     )
     parser.add_argument(
         "--width",
         type=int,
-        default=640,
+        default=1920,
         help="Input image width.",
     )
     parser.add_argument(
         "--top_k",
         type=int,
-        default=4800,
+        default=1024,
         help="Keep best k features.",
     )
     parser.add_argument(
@@ -102,13 +102,13 @@ def parse_args():
     parser.add_argument(
         "--export_path",
         type=str,
-        default="./model.onnx",
+        default="./detect_1920.onnx",
         help="Path to export ONNX model.",
     )
     parser.add_argument(
         "--opset",
         type=int,
-        default=11,
+        default=16,
         help="ONNX opset version.",
     )
 
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     if args.top_k > 4800:
         print("Warning: The current maximum supported value for TopK in TensorRT is 3840, which coincidentally equals 4800 * 0.8. Please ignore this warning if TensorRT will not be used in the future.")
 
-    batch_size = 2
+    batch_size = 1
     x1 = torch.randn(batch_size, 3, args.height, args.width, dtype=torch.float32, device='cpu')
     x2 = torch.randn(batch_size, 3, args.height, args.width, dtype=torch.float32, device='cpu')
 

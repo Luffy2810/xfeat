@@ -220,7 +220,7 @@ class LighterGlueONNX(nn.Module):
         "descriptor_dim": 96,
         "n_layers": 6,
         "num_heads": 1,
-        "filter_threshold": 0.1,  # match threshold
+        "filter_threshold": 0.03,  # match threshold
         "depth_confidence": -1,  # -1 is no early stopping, recommend: 0.95
         "width_confidence": -1,  # -1 is no point pruning, recommend: 0.99
         "weights": None,

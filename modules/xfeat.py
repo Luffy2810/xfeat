@@ -20,7 +20,7 @@ class XFeat(nn.Module):
 		It supports inference for both sparse and semi-dense feature extraction & matching.
 	"""
 
-	def __init__(self, weights = os.path.abspath(os.path.dirname(__file__)) + '/../weights/xfeat.pt', top_k = 4096, detection_threshold=0.05):
+	def __init__(self, weights = os.path.abspath(os.path.dirname(__file__)) + '/../xfeat_perm_steer.pth', top_k = 4096, detection_threshold=0.1):
 		super().__init__()
 		self.dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 		self.net = XFeatModel().to(self.dev).eval()
@@ -71,7 +71,7 @@ class XFeat(nn.Module):
 
 		#Convert logits to heatmap and extract kpts
 		K1h = self.get_kpts_heatmap(K1)
-		mkpts = self.NMS(K1h, threshold=detection_threshold, kernel_size=5)
+		mkpts = self.NMS(K1h, threshold=detection_threshold, kernel_size= 15)
 
 		#Compute reliability scores
 		_nearest = InterpolateSparse2d('nearest')
@@ -173,7 +173,7 @@ class XFeat(nn.Module):
 
 
 	@torch.inference_mode()
-	def match_xfeat(self, img1, img2, top_k = None, min_cossim = -1):
+	def match_xfeat(self, img1, img2, top_k = None, min_cossim = 0.85):
 		"""
 			Simple extractor and MNN matcher.
 			For simplicity it does not support batched mode due to possibly different number of kpts.
@@ -252,7 +252,7 @@ class XFeat(nn.Module):
 		heatmap = heatmap.permute(0, 1, 3, 2, 4).reshape(B, 1, H*8, W*8)
 		return heatmap
 
-	def NMS(self, x, threshold = 0.05, kernel_size = 5):
+	def NMS(self, x, threshold = 0.05, kernel_size = 10):
 		B, _, H, W = x.shape
 		pad=kernel_size//2
 		local_max = nn.MaxPool2d(kernel_size=kernel_size, stride=1, padding=pad)(x)

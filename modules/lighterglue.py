@@ -22,7 +22,7 @@ class LighterGlue(nn.Module):
     "mp": False,  # enable mixed precision
     "depth_confidence": -1,  # early stopping, disable with -1
     "width_confidence": 0.95,  # point pruning, disable with -1
-    "filter_threshold": 0.1,  # match threshold
+    "filter_threshold": 0.15,  # match threshold
     "weights": None,
     }
 
